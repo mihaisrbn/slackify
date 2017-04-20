@@ -8,16 +8,17 @@ STATUS=`osascript <<-AppleScript
 
 set appName to "Spotify"
 
-if application appName is running then
-	tell application id (id of application appName)
-		set currentArtist to artist of current track as string
-		set currentTrack to name of current track as string
-
-		end tell
-		return currentArtist & " - " & currentTrack
+if application "Spotify" is running then
+	tell application "Spotify"
+		if player state is playing then
+			return "Listening to " & (get name of current track) & " by " & (get artist of current track)
+		else
+			return ""
+		end if
+	end tell
 else
 	return ""
 end if
 AppleScript`
 
-curl -v -sS -d 'token='$TOKEN --data-urlencode 'profile={ "status_text": "'"$STATUS"'", "status_emoji": ":musical_note:" }' $URL
+curl -v -sS -d 'token='$TOKEN --data-urlencode 'profile={ "status_text": "'"$STATUS"'", "status_emoji": ":spotify:" }' $URL
